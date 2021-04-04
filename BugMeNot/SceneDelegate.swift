@@ -20,19 +20,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        let navigationController = UINavigationController(rootViewController: UIViewController())
+        let navigationController = UINavigationController(rootViewController: QueryTableViewController())
         window?.rootViewController = navigationController
         
-        window?.backgroundColor = .white
+        window?.backgroundColor = ThemeManager.backgroundColor
         
         if let statusBarFrame = window?.windowScene?.statusBarManager?.statusBarFrame {
             let statusBar = UIView()
             statusBar.frame = statusBarFrame
-            statusBar.backgroundColor = .green
+            statusBar.backgroundColor = ThemeManager.navigationBarColor
             window?.addSubview(statusBar)
         }
         
-        UINavigationBar.appearance().barTintColor = .green
+        UINavigationBar.appearance().barTintColor = ThemeManager.navigationBarColor
         
         window?.makeKeyAndVisible()
     }

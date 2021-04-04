@@ -1,2 +1,2 @@
 github "khalid-asad/PlatformCommon"
-github "scinfu/SwiftSoup"
+github "scinfu/SwiftSoup" "2.3.2"
