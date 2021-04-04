@@ -11,6 +11,7 @@ import Foundation
 enum Constants: String {
     case queryRequestBaseURL
     case queryRequestPath
+    case unknown
     
     var rawValue: String {
         switch self {
@@ -18,6 +19,8 @@ enum Constants: String {
             return "http://bugmenot.com"
         case .queryRequestPath:
             return "/view/%@"
+        case .unknown:
+            return "?"
         }
     }
 }
