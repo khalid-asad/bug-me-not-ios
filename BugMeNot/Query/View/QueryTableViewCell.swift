@@ -16,6 +16,12 @@ final class QueryTableViewCell: UITableViewCell {
     let successRateLabel = UILabel.WrappedLabel
     let votesLabel = UILabel.WrappedLabel
     let ageLabel = UILabel.WrappedLabel
+    let successRateImageView = UIImageView.ImageView
+    let votesImageView = UIImageView.ImageView
+    let ageImageView = UIImageView.ImageView
+    let successRateHorizontalStackView = UIStackView.HStack
+    let votesHorizontalStackView = UIStackView.HStack
+    let ageHorizontalStackView = UIStackView.HStack
     let verticalStackView = UIStackView.VStack
     let horizontalStackView = UIStackView.HStack
     
@@ -36,9 +42,34 @@ final class QueryTableViewCell: UITableViewCell {
             $0.textColor = ThemeManager.textColor
         }
         
-        horizontalStackView.addArrangedSubviews([successRateLabel, votesLabel, ageLabel])
+        [successRateImageView, votesImageView, ageImageView].forEach() {
+            $0.widthAnchor.constraint(equalToConstant: 16).isActive = true
+            $0.heightAnchor.constraint(equalToConstant: 16).isActive = true
+            $0.tintColor = .white
+        }
+        
+        let symbolConfiguration = UIImage.SymbolConfiguration(font: ThemeManager.subTitleFont)
+        successRateImageView.image = UIImage(systemName: "chart.bar", withConfiguration: symbolConfiguration)
+        votesImageView.image = UIImage(systemName: "hand.thumbsup", withConfiguration: symbolConfiguration)
+        ageImageView.image = UIImage(systemName: "clock", withConfiguration: symbolConfiguration)
+        
+        [successRateHorizontalStackView, votesHorizontalStackView, ageHorizontalStackView].forEach() {
+            $0.spacing = 4
+        }
+        
+        successRateHorizontalStackView.addArrangedSubviews([successRateImageView, successRateLabel])
+        votesHorizontalStackView.addArrangedSubviews([votesImageView, votesLabel])
+        ageHorizontalStackView.addArrangedSubviews([ageImageView, ageLabel])
+        
+        horizontalStackView.alignment = .leading
+        horizontalStackView.spacing = 10
+
+        horizontalStackView.addArrangedSubviews([successRateHorizontalStackView, votesHorizontalStackView, ageHorizontalStackView])
         verticalStackView.addArrangedSubviews([usernameLabel, passwordLabel, horizontalStackView])
-        contentView.addSubview(verticalStackView)
+        
+        verticalStackView.setCustomSpacing(12, after: passwordLabel)
+        
+        contentView.addConstraintSubview(verticalStackView, edgeInset: .init(top: 16, left: 16, bottom: -16, right: -16))
     }
     
     required init?(coder: NSCoder) {
@@ -46,11 +77,10 @@ final class QueryTableViewCell: UITableViewCell {
     }
     
     func configure(login: QueryResponse) {
-        usernameLabel.text = login.username
-        passwordLabel.text = login.password
-        successRateLabel.text = login.successRate
-        votesLabel.text = login.votes
-        ageLabel.text = login.age
+        usernameLabel.attributedText = login.formattedUsername
+        passwordLabel.attributedText = login.formattedPassword
+        successRateLabel.text = login.formattedSuccessRate
+        votesLabel.text = login.formattedVotes
+        ageLabel.text = login.formattedAge
     }
 }
-

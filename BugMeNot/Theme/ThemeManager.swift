@@ -37,17 +37,22 @@ struct ThemeManager {
     }
     
     static var titleFont: UIFont {
-        guard let font = UIFont(name: "Helvetica-Bold", size: 20) else { return UIFont.systemFont(ofSize: 20, weight: .bold)}
+        guard let font = UIFont(name: "Avenir-Light", size: 18) else { return UIFont.systemFont(ofSize: 20, weight: .bold)}
+        return font
+    }
+    
+    static var boldTitleFont: UIFont {
+        guard let font = UIFont(name: "Avenir-Medium", size: 18) else { return UIFont.systemFont(ofSize: 20, weight: .bold)}
         return font
     }
     
     static var subTitleFont: UIFont {
-        guard let font = UIFont(name: "Helvetica", size: 14) else { return UIFont.systemFont(ofSize: 16)}
+        guard let font = UIFont(name: "Avenir-Light", size: 14) else { return UIFont.systemFont(ofSize: 16)}
         return font
     }
     
     static var smallTitleFont: UIFont {
-        guard let font = UIFont(name: "Helvetica", size: 12) else { return UIFont.systemFont(ofSize: 12)}
+        guard let font = UIFont(name: "Avenir-Light", size: 12) else { return UIFont.systemFont(ofSize: 12)}
         return font
     }
     
