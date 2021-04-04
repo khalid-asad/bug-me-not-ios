@@ -11,6 +11,8 @@ import Foundation
 enum Constants: String {
     case queryRequestBaseURL
     case queryRequestPath
+    case searchPlaceholder
+    case title
     case unknown
     
     var rawValue: String {
@@ -19,6 +21,10 @@ enum Constants: String {
             return "http://bugmenot.com"
         case .queryRequestPath:
             return "/view/%@"
+        case .searchPlaceholder:
+            return "Search Website (i.e. theathletic.com)"
+        case .title:
+            return "BugMeNot"
         case .unknown:
             return "?"
         }

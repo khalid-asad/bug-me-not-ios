@@ -134,7 +134,7 @@ extension QueryTableViewController {
         guard let navigationController = navigationController else { return }
         let navigationBar = navigationController.navigationBar
         
-        navigationBar.prefersLargeTitles = true
+        navigationBar.prefersLargeTitles = false
         navigationBar.backgroundColor = ThemeManager.navigationBarColor
         navigationBar.tintColor = ThemeManager.navigationBarTextColor
         
@@ -142,7 +142,11 @@ extension QueryTableViewController {
         backButton.tintColor = ThemeManager.navigationBarTextColor
         navigationItem.backBarButtonItem = backButton
         
-        title = "BugMeNot"
+        let imageView = UIImageView(frame: .init(x: 0, y: 0, width: 200, height: 50))
+        imageView.image = #imageLiteral(resourceName: "logo")
+        imageView.contentMode = .scaleAspectFit
+        navigationItem.titleView = imageView
+        title = Constants.title.rawValue
     }
     
     /// Configure the Table View.
@@ -182,7 +186,7 @@ extension QueryTableViewController {
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Search Website (i.e. theathletic.com)"
+        searchController.searchBar.placeholder = Constants.searchPlaceholder.rawValue
         searchController.searchBar.delegate = self
         
         configureSearchBarTheme()

@@ -32,11 +32,13 @@ struct QueryResponse {
 extension QueryResponse {
     
     var formattedUsername: NSAttributedString {
-        NSMutableAttributedString(string: "Username: \(username ?? "")").boldedString("Username:", boldFont: ThemeManager.boldTitleFont)
+        NSMutableAttributedString(string: "\(SubStringCodingKeys.username.rawValue) \(username ?? "")")
+            .boldedString("\(SubStringCodingKeys.username.rawValue)", boldFont: ThemeManager.boldTitleFont)
     }
     
     var formattedPassword: NSAttributedString {
-        NSMutableAttributedString(string: "Password: \(password ?? "")").boldedString("Password:", boldFont: ThemeManager.boldTitleFont)
+        NSMutableAttributedString(string: "\(SubStringCodingKeys.password.rawValue) \(password ?? "")")
+            .boldedString("\(SubStringCodingKeys.password.rawValue)", boldFont: ThemeManager.boldTitleFont)
     }
     
     var formattedSuccessRate: String? {
