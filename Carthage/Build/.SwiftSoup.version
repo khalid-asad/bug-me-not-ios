@@ -2,7 +2,7 @@
   "commitish" : "2.3.2",
   "iOS" : [
     {
-      "hash" : "2ae02d75dd16ac43289c29fbdedc1280838248f07656dbf20dabac0e8b0d7762",
+      "hash" : "61357e39cd1d489a7636346483baa176f9cbf12c3ff64809932cefc3b2579a40",
       "name" : "SwiftSoup",
       "linking" : "dynamic",
       "swiftToolchainVersion" : "5.2.4 (swiftlang-1103.0.32.9 clang-1103.0.32.53)"
