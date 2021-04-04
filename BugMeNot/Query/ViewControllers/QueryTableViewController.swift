@@ -68,13 +68,11 @@ extension QueryTableViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath) as? QueryTableViewCell,
-            let movie = viewModel.items[safe: (indexPath as NSIndexPath).row]
+            let login = viewModel.items[safe: (indexPath as NSIndexPath).row]
         else { return QueryTableViewCell() }
         
-//        cell.movieNameLabel.text = movie.title
-//        cell.movieDescriptionLabel.text = movie.overview
-//        cell.movieImageView.image = MovieViewController.placeHolderImage
-        
+        cell.configure(login: login)
+                
         // If there is a cached image, set it to the view.
         guard viewModel.cache.object(forKey: (indexPath as NSIndexPath).row as AnyObject) == nil else {
             return cell
