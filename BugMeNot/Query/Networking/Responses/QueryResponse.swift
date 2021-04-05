@@ -31,12 +31,12 @@ struct QueryResponse {
 
 extension QueryResponse {
     
-    var formattedUsername: NSAttributedString {
+    var formattedUsername: NSMutableAttributedString {
         NSMutableAttributedString(string: "\(SubStringCodingKeys.username.rawValue) \(username ?? "")")
             .boldedString("\(SubStringCodingKeys.username.rawValue)", boldFont: ThemeManager.boldTitleFont)
     }
     
-    var formattedPassword: NSAttributedString {
+    var formattedPassword: NSMutableAttributedString {
         NSMutableAttributedString(string: "\(SubStringCodingKeys.password.rawValue) \(password ?? "")")
             .boldedString("\(SubStringCodingKeys.password.rawValue)", boldFont: ThemeManager.boldTitleFont)
     }
@@ -65,7 +65,15 @@ extension QueryResponse {
         else {
             return Constants.unknown.rawValue
         }
-        return String(age) + timePeriod.prefix(1)
+        var time: String {
+            let time = timePeriod.prefix(1)
+            if time == "m" {
+                return "mo"
+            } else {
+                return String(time)
+            }
+        }
+        return String(age) + time
     }
 }
 

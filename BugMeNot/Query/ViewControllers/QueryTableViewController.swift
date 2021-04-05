@@ -44,30 +44,18 @@ final class QueryTableViewController: UIViewController {
 
 // MARK: - Table View Protocols
 extension QueryTableViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { 128 }
-    
+        
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         viewModel.items.count
     }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        guard let viewModel = viewModel.items[safe: (indexPath as NSIndexPath).row] else { return }
-//        let image = viewModel.cache.object(forKey: (indexPath as NSIndexPath).row as AnyObject) as? UIImage ?? MovieViewController.placeHolderImage
         
-//        let vc = MovieDetailsViewController(model: viewModel, image: image)
-//        vc.modalPresentationStyle = .fullScreen
-//        navigationController?.pushViewController(vc, animated: true)
-    }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // When scrolling past the last cell, load the next page of data.
         if indexPath.row == viewModel.items.count - 1 , let searchQuery = searchQuery {
             fetch(query: searchQuery)
         }
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath) as? QueryTableViewCell,
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: QueryTableViewCell.cellIdentifier, for: indexPath) as? QueryTableViewCell,
             let login = viewModel.items[safe: (indexPath as NSIndexPath).row]
         else { return QueryTableViewCell() }
         
@@ -81,7 +69,7 @@ extension QueryTableViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-// MARK: - Search Protocols
+// MARK: - Search Bar Protocols
 extension QueryTableViewController: UISearchResultsUpdating, UISearchBarDelegate {
     
     /// Protocol function for searching.
@@ -118,10 +106,10 @@ extension QueryTableViewController: UISearchResultsUpdating, UISearchBarDelegate
 }
 
 // MARK: - Private Methods
-extension QueryTableViewController {
+private extension QueryTableViewController {
     
     /// Asynchronously reload the tableView data and end refreshing.
-    private func reloadData() {
+    func reloadData() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.tableView.reloadData()
@@ -130,7 +118,7 @@ extension QueryTableViewController {
     }
     
     /// Configure the navigation bar theme.
-    private func configureNavigationBar() {
+    func configureNavigationBar() {
         guard let navigationController = navigationController else { return }
         let navigationBar = navigationController.navigationBar
         
@@ -150,14 +138,14 @@ extension QueryTableViewController {
     }
     
     /// Configure the Table View.
-    private func configureTableView() {
+    func configureTableView() {
         let barHeight: CGFloat = UIApplication.shared.statusBarFrame.size.height
         let displayWidth: CGFloat = view.frame.width
         let displayHeight: CGFloat = view.frame.height
         
         // Set the table view within the frame
         tableView = UITableView(frame: CGRect(x: 0, y: barHeight, width: displayWidth, height: displayHeight))
-        tableView.register(QueryTableViewCell.classForCoder(), forCellReuseIdentifier: "MyCell")
+        tableView.register(QueryTableViewCell.classForCoder(), forCellReuseIdentifier: QueryTableViewCell.cellIdentifier)
 
         // Estimate a row height of 44
         tableView.rowHeight = UITableView.automaticDimension
@@ -182,7 +170,7 @@ extension QueryTableViewController {
     }
     
     /// Configures the Search Controller in the Navigation bar.
-    private func configureSearchController() {
+    func configureSearchController() {
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
@@ -196,7 +184,7 @@ extension QueryTableViewController {
     }
     
     /// Configures the Search Bar Segmented Control and Bar Button Item themes.
-    private func configureSearchBarTheme() {
+    func configureSearchBarTheme() {
         UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).setTitleTextAttributes([.foregroundColor: ThemeManager.navigationBarTextColor], for: .normal)
         let segmentedControl = UISegmentedControl.appearance(whenContainedInInstancesOf: [UISearchBar.self])
         segmentedControl.setTitleTextAttributes([.foregroundColor: ThemeManager.navigationBarTextColor], for: .normal)
@@ -206,7 +194,7 @@ extension QueryTableViewController {
     }
     
     /// Function to search by cancelling previous requests, and creating a new one.
-    private func search(for text: String) {
+    func search(for text: String) {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(reloadTableView), object: nil)
         clearDataAndCache()
         searchQuery = text
@@ -214,15 +202,14 @@ extension QueryTableViewController {
     }
     
     /// Clears the cache in the model, then reloads the data in the table view.
-    private func clearDataAndCache() {
+    func clearDataAndCache() {
         viewModel.items.removeAll()
         viewModel.cache.removeAllObjects()
         reloadData()
     }
     
     /// Reload the table view by fetching the search query.
-    @objc
-    private func reloadTableView() {
+    @objc func reloadTableView() {
         // If search query is non-existent then wipe the data and cache and return
         guard let searchQuery = searchQuery, !searchQuery.isEmpty else {
             clearDataAndCache()
@@ -232,7 +219,7 @@ extension QueryTableViewController {
     }
     
     /// Fetches the search results from the API through the model.
-    private func fetch(query: String) {
+    func fetch(query: String) {
         viewModel.fetch(query: query) { [weak self] error in
             guard let self = self else { return }
             if let error = error {
