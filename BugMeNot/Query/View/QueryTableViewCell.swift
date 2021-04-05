@@ -11,14 +11,18 @@ import UIKit
 
 final class QueryTableViewCell: UITableViewCell {
     
+    static let cellIdentifier: String = "QueryTableViewCell"
+    
     let usernameLabel = UILabel.WrappedLabel
     let passwordLabel = UILabel.WrappedLabel
     let successRateLabel = UILabel.WrappedLabel
     let votesLabel = UILabel.WrappedLabel
     let ageLabel = UILabel.WrappedLabel
+    
     let successRateImageView = UIImageView.ImageView
     let votesImageView = UIImageView.ImageView
     let ageImageView = UIImageView.ImageView
+    
     let successRateHorizontalStackView = UIStackView.HStack
     let votesHorizontalStackView = UIStackView.HStack
     let ageHorizontalStackView = UIStackView.HStack
@@ -30,8 +34,15 @@ final class QueryTableViewCell: UITableViewCell {
         
         backgroundColor = ThemeManager.backgroundColor
         
+        isUserInteractionEnabled = true
+        let usernameTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapUsernameLabel))
+        let passwordTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapPasswordLabel))
+        usernameLabel.addGestureRecognizer(usernameTapGesture)
+        passwordLabel.addGestureRecognizer(passwordTapGesture)
+        
         [usernameLabel, passwordLabel].forEach() {
             $0.font = ThemeManager.titleFont
+            $0.isUserInteractionEnabled = true
         }
         
         [successRateLabel, votesLabel, ageLabel].forEach() {
@@ -77,10 +88,38 @@ final class QueryTableViewCell: UITableViewCell {
     }
     
     func configure(login: QueryResponse) {
-        usernameLabel.attributedText = login.formattedUsername
-        passwordLabel.attributedText = login.formattedPassword
+        let attachment = NSTextAttachment()
+        let clipboardImage = UIImage(systemName: "doc.on.clipboard.fill", withConfiguration: UIImage.SymbolConfiguration(scale: .small))?.withRenderingMode(.alwaysTemplate)
+        clipboardImage?.withTintColor(.white)
+        attachment.image = clipboardImage
+        let attachmentString = NSMutableAttributedString(attachment: attachment)
+        attachmentString.insert(.init(string: " "), at: 0)
+        
+        let username = login.formattedUsername
+        username.append(attachmentString)
+        let password = login.formattedPassword
+        password.append(attachmentString)
+        
+        usernameLabel.attributedText = username
+        passwordLabel.attributedText = password
         successRateLabel.text = login.formattedSuccessRate
         votesLabel.text = login.formattedVotes
         ageLabel.text = login.formattedAge
+    }
+}
+
+// MARK: - Selector Methods
+extension QueryTableViewCell {
+    
+    @objc func didTapUsernameLabel(sender: UITapGestureRecognizer) {
+        guard let label = sender.view as? UILabel else { return }
+        UIPasteboard.general.string = String(label.text?.split(separator: " ")[safe: 1] ?? "")
+        UIViewController.rootViewController?.showToast(message: FormattedConstants.copyToastMessage(field: "Username").rawValue, seconds: 0.5)
+    }
+    
+    @objc func didTapPasswordLabel(sender: UITapGestureRecognizer) {
+        guard let label = sender.view as? UILabel else { return }
+        UIPasteboard.general.string = String(label.text?.split(separator: " ")[safe: 1] ?? "")
+        UIViewController.rootViewController?.showToast(message: FormattedConstants.copyToastMessage(field: "Password").rawValue, seconds: 0.5)
     }
 }

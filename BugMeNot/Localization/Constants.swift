@@ -9,6 +9,7 @@
 import Foundation
 
 enum Constants: String {
+    case copyToastMessage
     case queryRequestBaseURL
     case queryRequestPath
     case searchPlaceholder
@@ -17,6 +18,8 @@ enum Constants: String {
     
     var rawValue: String {
         switch self {
+        case .copyToastMessage:
+            return "%@ copied to clipboard!"
         case .queryRequestBaseURL:
             return "http://bugmenot.com"
         case .queryRequestPath:
@@ -32,10 +35,13 @@ enum Constants: String {
 }
 
 enum FormattedConstants {
+    case copyToastMessage(field: String)
     case queryRequestPath(query: String)
     
     var rawValue: String {
         switch self {
+        case .copyToastMessage(let field):
+            return String(format: Constants.copyToastMessage.rawValue, field)
         case .queryRequestPath(let query):
             return String(format: Constants.queryRequestPath.rawValue, query)
         }
