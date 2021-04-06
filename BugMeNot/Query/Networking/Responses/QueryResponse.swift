@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftSoup
+import enum PlatformCommon.NetworkError
 
 struct QueryResponse {
     var username: String?
@@ -80,61 +81,57 @@ extension QueryResponse {
 // MARK: - Internal Methods
 extension QueryResponse {
     
-    static func response(from document: Document) -> [QueryResponse] {
+    static func response(from document: Document) throws -> [QueryResponse] {
         let body = document.body()
-        do {
-            let content = try body?.getElementById(CodingKeys.content.rawValue)
-            let contentArray = content?.children()
-            let accountsContent = contentArray?.filter({ $0.hasClass(CodingKeys.account.rawValue) })
-            guard let accountContent = accountsContent, !accountContent.isEmpty else { return [] }
+        let content = try body?.getElementById(CodingKeys.content.rawValue)
+        let contentArray = content?.children()
+        let accountsContent = contentArray?.filter({ $0.hasClass(CodingKeys.account.rawValue) })
+        guard let accountContent = accountsContent, !accountContent.isEmpty else { throw NetworkError.emptyResponse }
+        
+        return try accountContent.compactMap {
+            let string = try $0.text()
+            let stringArray = string.split(separator: " ")
+            var response = QueryResponse()
             
-            return try accountContent.compactMap {
-                let string = try $0.text()
-                let stringArray = string.split(separator: " ")
-                var response = QueryResponse()
-                
-                var index = 0
-                
-                if stringArray.first == SubStringCodingKeys.username.rawValue, let username = stringArray[safe: index + 1] {
-                    response.username = String(username)
-                }
-                
-                index += 2
-                
-                if stringArray[safe: index] == SubStringCodingKeys.password.rawValue {
-                    if let password = stringArray[safe: index + 1],
-                        password != SubStringCodingKeys.other.rawValue,
-                        password != SubStringCodingKeys.stats.rawValue {
-                        response.password = String(password)
-                        index += 2
-                    } else {
-                        index += 1
-                    }
-                }
-                                
-                if stringArray[safe: index] == SubStringCodingKeys.other.rawValue {
-                    index += 2 // Ignore and move on to the next set
-                }
-                
-                if stringArray[safe: index] == SubStringCodingKeys.stats.rawValue {
-                    index += 1
-                    if let successInt = stringArray[safe: index], let successString = stringArray[safe: index + 1], let rateString = stringArray[safe: index + 2] {
-                        response.successRate = "\(String(successInt)) \(String(successString)) \(String(rateString))"
-                    }
-                    index += 3
-                    if let votesInt = stringArray[safe: index], let votesString = stringArray[safe: index + 1] {
-                        response.votes = "\(String(votesInt)) \(String(votesString))"
-                    }
-                    index += 2
-                    if let ageInt = stringArray[safe: index], let monthsString = stringArray[safe: index + 1], let oldString = stringArray[safe: index + 2] {
-                        response.age = "\(String(ageInt)) \(String(monthsString)) \(String(oldString))"
-                    }
-                }
-                
-                return response
+            var index = 0
+            
+            if stringArray.first == SubStringCodingKeys.username.rawValue, let username = stringArray[safe: index + 1] {
+                response.username = String(username)
             }
-        } catch {
-            return []
+            
+            index += 2
+            
+            if stringArray[safe: index] == SubStringCodingKeys.password.rawValue {
+                if let password = stringArray[safe: index + 1],
+                    password != SubStringCodingKeys.other.rawValue,
+                    password != SubStringCodingKeys.stats.rawValue {
+                    response.password = String(password)
+                    index += 2
+                } else {
+                    index += 1
+                }
+            }
+            
+            if stringArray[safe: index] == SubStringCodingKeys.other.rawValue {
+                index += 2 // Ignore and move on to the next set
+            }
+            
+            if stringArray[safe: index] == SubStringCodingKeys.stats.rawValue {
+                index += 1
+                if let successInt = stringArray[safe: index], let successString = stringArray[safe: index + 1], let rateString = stringArray[safe: index + 2] {
+                    response.successRate = "\(String(successInt)) \(String(successString)) \(String(rateString))"
+                }
+                index += 3
+                if let votesInt = stringArray[safe: index], let votesString = stringArray[safe: index + 1] {
+                    response.votes = "\(String(votesInt)) \(String(votesString))"
+                }
+                index += 2
+                if let ageInt = stringArray[safe: index], let monthsString = stringArray[safe: index + 1], let oldString = stringArray[safe: index + 2] {
+                    response.age = "\(String(ageInt)) \(String(monthsString)) \(String(oldString))"
+                }
+            }
+            
+            return response
         }
     }
 }
