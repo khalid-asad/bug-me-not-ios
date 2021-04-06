@@ -16,6 +16,7 @@ struct QueryResponse {
     var successRate: String?
     var votes: String?
     var age: String?
+    var originalSequence: Int
     
     enum CodingKeys: String {
         case content
@@ -30,6 +31,46 @@ struct QueryResponse {
     }
 }
 
+// MARK: - Integer Values for Sorting
+extension QueryResponse {
+    
+    var successRateInteger: Int {
+        let successRateInt = successRate?
+            .split(separator: " ")
+            .first?
+            .replacingOccurrences(of: "%", with: "")
+        return Int(String(successRateInt ?? "0")) ?? 0
+    }
+    
+    var votesInteger: Int {
+        let votesInt = votes?
+            .split(separator: " ")
+            .first
+        return Int(String(votesInt ?? "0")) ?? 0
+    }
+
+    var ageDate: Date {
+        let ageStrings = age?.split(separator: " ")
+        guard let ageString = ageStrings?.first,
+            let age = Int(ageString),
+            let timePeriod = ageStrings?[safe: 1]
+        else {
+            return Date()
+        }
+        var timeType: Calendar.Component {
+            let time = timePeriod.prefix(1)
+            switch time {
+            case "y": return .year
+            case "m": return .month
+            case "d": return .day
+            default: return .minute
+            }
+        }
+        return Date().addToDate(value: -age, type: timeType)
+    }
+}
+
+// MARK: - Formatted String Values
 extension QueryResponse {
     
     var formattedUsername: NSMutableAttributedString {
@@ -42,39 +83,16 @@ extension QueryResponse {
             .boldedString("\(SubStringCodingKeys.password.rawValue)", boldFont: ThemeManager.boldTitleFont)
     }
     
-    var formattedSuccessRate: String? {
-        let successRateStrings = successRate?.split(separator: " ")
-        guard let successRateString = successRateStrings?.first else {
-            return Constants.unknown.rawValue
-        }
-        return String(successRateString)
+    var formattedSuccessRate: String {
+        String(successRateInteger) + "%"
     }
     
-    var formattedVotes: String? {
-        let voteStrings = votes?.split(separator: " ")
-        guard let voteCountString = voteStrings?.first, let voteCount = Int(voteCountString) else {
-            return Constants.unknown.rawValue
-        }
-        return String(voteCount)
+    var formattedVotes: String {
+        String(votesInteger)
     }
     
     var formattedAge: String {
-        let ageStrings = age?.split(separator: " ")
-        guard let ageString = ageStrings?.first,
-            let age = Int(ageString),
-            let timePeriod = ageStrings?[safe: 1]
-        else {
-            return Constants.unknown.rawValue
-        }
-        var time: String {
-            let time = timePeriod.prefix(1)
-            if time == "m" {
-                return "mo"
-            } else {
-                return String(time)
-            }
-        }
-        return String(age) + time
+        ageDate.toMonthYear
     }
 }
 
@@ -88,10 +106,10 @@ extension QueryResponse {
         let accountsContent = contentArray?.filter({ $0.hasClass(CodingKeys.account.rawValue) })
         guard let accountContent = accountsContent, !accountContent.isEmpty else { throw NetworkError.emptyResponse }
         
-        return try accountContent.compactMap {
-            let string = try $0.text()
+        return try accountContent.enumerated().compactMap { (index, item) in
+            let string = try item.text()
             let stringArray = string.split(separator: " ")
-            var response = QueryResponse()
+            var response = QueryResponse(originalSequence: index)
             
             var index = 0
             
