@@ -27,10 +27,10 @@ final class NetworkManager: NetworkRequestProtocol {
                 let htmlString = String(decoding: data, as: UTF8.self)
                 do {
                     let document: Document = try SwiftSoup.parse(htmlString)
-                    let response = QueryResponse.response(from: document)
+                    let response = try QueryResponse.response(from: document)
                     completion(.success(response))
-                } catch {
-                    completion(.failure(.unableToDecodeJSON))
+                } catch(let error) {
+                    completion(.failure(error as? NetworkError ?? .unableToDecodeJSON))
                 }
             case .failure(let error):
                 completion(.failure(error))

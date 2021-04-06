@@ -12,6 +12,9 @@ enum Constants: String {
     case copyToastMessage
     case queryRequestBaseURL
     case queryRequestPath
+    case searchBannedInputMessage
+    case searchEmptyMessage
+    case searchInvalidInputMessage
     case searchPlaceholder
     case title
     case unknown
@@ -24,6 +27,12 @@ enum Constants: String {
             return "http://bugmenot.com"
         case .queryRequestPath:
             return "/view/%@"
+        case .searchBannedInputMessage:
+            return "This site has been barred from the bugmenot system.\n\nSites should only appear blocked here if they match one or more of the following criteria:\n- Pay-per-view: users pay money to access the site\n- Community: users register only to add/change content (but not to view)\n- Fraud risk: user accounts contain sensitive details e.g. banks, online stores, etc"
+        case .searchEmptyMessage:
+            return "Try entering in a url in the search bar above."
+        case .searchInvalidInputMessage:
+            return "Invalid domain entered (expecting 'example.com'). Please try again with a valid URL."
         case .searchPlaceholder:
             return "Search Website (i.e. theathletic.com)"
         case .title:

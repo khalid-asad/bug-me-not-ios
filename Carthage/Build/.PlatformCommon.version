@@ -1,8 +1,8 @@
 {
-  "commitish" : "1.0.5",
+  "commitish" : "1.0.6",
   "iOS" : [
     {
-      "hash" : "45b303b2ecfbbd8204cb8e61107ca1207fa4dde5a2c25113424107bdf81900ca",
+      "hash" : "eccf3ca5250b4a2b3818c8da4f0f886ece1fcf94fc620c63a72913d74c850bb9",
       "name" : "PlatformCommon",
       "linking" : "dynamic",
       "swiftToolchainVersion" : "5.2.4 (swiftlang-1103.0.32.9 clang-1103.0.32.53)"

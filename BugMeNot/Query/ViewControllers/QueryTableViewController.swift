@@ -46,25 +46,30 @@ final class QueryTableViewController: UIViewController {
 extension QueryTableViewController: UITableViewDelegate, UITableViewDataSource {
         
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.items.count
+        if viewModel.items.count == 0 {
+            var message: Constants {
+                if searchQuery == nil || searchQuery?.isEmpty == true {
+                    return .searchEmptyMessage
+                } else {
+                    if searchQuery?.isValidURL == true {
+                        return .searchBannedInputMessage
+                    } else {
+                        return .searchInvalidInputMessage
+                    }
+                }
+            }
+            tableView.setEmptyMessage(message.rawValue, textColor: ThemeManager.textColor, font: ThemeManager.subHeaderFont)
+        } else {
+            tableView.restore()
+        }
+        return viewModel.items.count
     }
         
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // When scrolling past the last cell, load the next page of data.
-        if indexPath.row == viewModel.items.count - 1 , let searchQuery = searchQuery {
-            fetch(query: searchQuery)
-        }
-        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: QueryTableViewCell.cellIdentifier, for: indexPath) as? QueryTableViewCell,
             let login = viewModel.items[safe: (indexPath as NSIndexPath).row]
         else { return QueryTableViewCell() }
-        
         cell.configure(login: login)
-                
-        // If there is a cached image, set it to the view.
-        guard viewModel.cache.object(forKey: (indexPath as NSIndexPath).row as AnyObject) == nil else {
-            return cell
-        }
         return cell
     }
 }
