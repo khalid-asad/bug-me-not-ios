@@ -82,4 +82,8 @@ struct ThemeManager {
     static var textColor: UIColor { complementedColor }
     
     static var tableViewCellColor: UIColor { .white }
+    
+    static var keyboardAppearance: UIKeyboardAppearance { .dark }
+    
+    static var segmentedControlColor: UIColor { MaterialColor.red[.o900] }
 }

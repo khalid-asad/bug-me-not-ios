@@ -9,6 +9,13 @@
 import PlatformCommon
 import UIKit
 
+enum SearchResultSortMode: String, CaseIterable {
+    case none = "None"
+    case successRate = "Success Rate"
+    case votes = "Votes"
+    case age = "Age"
+}
+
 final class QueryTableViewController: UIViewController {
     
     private var viewModel: QueryViewModel!
@@ -16,6 +23,7 @@ final class QueryTableViewController: UIViewController {
     private var refreshControl: UIRefreshControl!
     private var searchController: UISearchController!
     private var searchQuery: String?
+    private var searchScope: SearchResultSortMode? = SearchResultSortMode.none
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -92,7 +100,12 @@ extension QueryTableViewController: UISearchResultsUpdating, UISearchBarDelegate
         clearDataAndCache()
         search(for: searchBarText)
     }
-        
+    
+    /// Protocol function for Scopes (so we can sort by Genres).
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        searchScope = SearchResultSortMode.allCases[selectedScope]
+    }
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.endEditing(true)
     }
@@ -161,6 +174,7 @@ private extension QueryTableViewController {
         tableView.delegate = self
         
         tableView.backgroundColor = ThemeManager.backgroundColor
+        tableView.keyboardDismissMode = .onDrag
         
         view.addSubview(tableView)
         
@@ -180,7 +194,10 @@ private extension QueryTableViewController {
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = Constants.searchPlaceholder.rawValue
+        searchController.searchBar.scopeButtonTitles = SearchResultSortMode.allCases.map { $0.rawValue }
         searchController.searchBar.delegate = self
+        searchController.searchBar.keyboardType = .URL
+        searchController.searchBar.keyboardAppearance = ThemeManager.keyboardAppearance
         
         configureSearchBarTheme()
         
@@ -194,7 +211,8 @@ private extension QueryTableViewController {
         let segmentedControl = UISegmentedControl.appearance(whenContainedInInstancesOf: [UISearchBar.self])
         segmentedControl.setTitleTextAttributes([.foregroundColor: ThemeManager.navigationBarTextColor], for: .normal)
         segmentedControl.setTitleTextAttributes([.foregroundColor: ThemeManager.complementedColor], for: .selected)
-        segmentedControl.selectedSegmentTintColor = ThemeManager.backgroundColor
+        segmentedControl.selectedSegmentTintColor = ThemeManager.backgroundColor.withAlphaComponent(0.5)
+        segmentedControl.backgroundColor = ThemeManager.segmentedControlColor
         searchController.searchBar.tintColor = ThemeManager.navigationBarTextColor
     }
     
@@ -204,6 +222,18 @@ private extension QueryTableViewController {
         clearDataAndCache()
         searchQuery = text
         perform(#selector(reloadTableView), with: nil, afterDelay: 0.25)
+    }
+    
+    func sort() {
+        guard let searchScope = self.searchScope else { return }
+        self.viewModel.items = self.viewModel.items.sorted {
+            switch searchScope {
+            case .successRate: return $0.successRateInteger > $1.successRateInteger
+            case .votes: return $0.votesInteger > $1.votesInteger
+            case .age: return $0.ageDate > $1.ageDate
+            case .none: return $0.originalSequence < $0.originalSequence
+            }
+        }
     }
     
     /// Clears the cache in the model, then reloads the data in the table view.
@@ -230,6 +260,7 @@ private extension QueryTableViewController {
             if let error = error {
                 print("Error: \(String(describing: error))")
             } else {
+                self.sort()
                 self.reloadData()
             }
         }
