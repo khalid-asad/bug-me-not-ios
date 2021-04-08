@@ -1,8 +1,32 @@
 {
+  "Mac" : [
+    {
+      "hash" : "5252569f85425d16ec79a171efb614473d4a6c906a9423849696ddcd59baf98d",
+      "name" : "SwiftSoup",
+      "linking" : "dynamic",
+      "swiftToolchainVersion" : "5.2.4 (swiftlang-1103.0.32.9 clang-1103.0.32.53)"
+    }
+  ],
+  "watchOS" : [
+    {
+      "hash" : "f2f7105c176ccf617276712daed60f744fb36caa4db2db33c058b545e336a2de",
+      "name" : "SwiftSoup",
+      "linking" : "dynamic",
+      "swiftToolchainVersion" : "5.2.4 (swiftlang-1103.0.32.9 clang-1103.0.32.53)"
+    }
+  ],
+  "tvOS" : [
+    {
+      "hash" : "53847e8e653df2f735c94988f4791045fa0126ae640e69633a23c31d87aa07fb",
+      "name" : "SwiftSoup",
+      "linking" : "dynamic",
+      "swiftToolchainVersion" : "5.2.4 (swiftlang-1103.0.32.9 clang-1103.0.32.53)"
+    }
+  ],
   "commitish" : "2.3.2",
   "iOS" : [
     {
-      "hash" : "37ce137e872ee104ed0006564852e6ed97132d664c8127ee53d0a74f5c67ab31",
+      "hash" : "3853f05281a55f40454641be3ecc27a3b5e61d137f6f4be96ba11388e19ae4b7",
       "name" : "SwiftSoup",
       "linking" : "dynamic",
       "swiftToolchainVersion" : "5.2.4 (swiftlang-1103.0.32.9 clang-1103.0.32.53)"

@@ -1,8 +1,17 @@
 {
+  "Mac" : [
+
+  ],
+  "watchOS" : [
+
+  ],
+  "tvOS" : [
+
+  ],
   "commitish" : "1.0.7",
   "iOS" : [
     {
-      "hash" : "d5e9eeaa61ae89ed1b2b4dc43463102bbf961fbfb70ca0c087acbd69317a9cbe",
+      "hash" : "a860f6d9844e30bb5162c533515c90a716448465e9854ab989b5a35fd33df97f",
       "name" : "PlatformCommon",
       "linking" : "dynamic",
       "swiftToolchainVersion" : "5.2.4 (swiftlang-1103.0.32.9 clang-1103.0.32.53)"
