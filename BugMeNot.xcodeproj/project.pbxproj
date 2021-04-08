@@ -3,14 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		19195B0226193B05005945CE /* PlatformCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19195B0126193B05005945CE /* PlatformCommon.framework */; };
-		19195B0326193B05005945CE /* PlatformCommon.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 19195B0126193B05005945CE /* PlatformCommon.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		19195B0626193B07005945CE /* SwiftSoup.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19195B0526193B07005945CE /* SwiftSoup.framework */; };
-		19195B0726193B07005945CE /* SwiftSoup.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 19195B0526193B07005945CE /* SwiftSoup.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		19217B3A261E992D00EF81EB /* PlatformCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19195B0126193B05005945CE /* PlatformCommon.framework */; };
+		19217B3D261E993400EF81EB /* SwiftSoup.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19195B0526193B07005945CE /* SwiftSoup.framework */; };
 		19595D19261941E400290295 /* QueryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19595D18261941E400290295 /* QueryViewModel.swift */; };
 		19595D1C2619422100290295 /* QueryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19595D1B2619422100290295 /* QueryTableViewCell.swift */; };
 		19595D1F2619440700290295 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19595D1E2619440700290295 /* ThemeManager.swift */; };
@@ -38,21 +36,6 @@
 			remoteInfo = BugMeNot;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		19195B0426193B05005945CE /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				19195B0326193B05005945CE /* PlatformCommon.framework in Embed Frameworks */,
-				19195B0726193B07005945CE /* SwiftSoup.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		19195B0126193B05005945CE /* PlatformCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PlatformCommon.framework; path = Carthage/Build/iOS/PlatformCommon.framework; sourceTree = "<group>"; };
@@ -84,8 +67,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19195B0226193B05005945CE /* PlatformCommon.framework in Frameworks */,
-				19195B0626193B07005945CE /* SwiftSoup.framework in Frameworks */,
+				19217B3A261E992D00EF81EB /* PlatformCommon.framework in Frameworks */,
+				19217B3D261E993400EF81EB /* SwiftSoup.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,7 +232,6 @@
 				19802ED62619335400BDFEB0 /* Sources */,
 				19802ED72619335400BDFEB0 /* Frameworks */,
 				19802ED82619335400BDFEB0 /* Resources */,
-				19195B0426193B05005945CE /* Embed Frameworks */,
 				19595D1426193B6100290295 /* ShellScript */,
 			);
 			buildRules = (
@@ -340,22 +322,22 @@
 /* Begin PBXShellScriptBuildPhase section */
 		19595D1426193B6100290295 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			files = (
 			);
 			inputFileListPaths = (
+				"$(SRCROOT)/input.xcfilelist",
 			);
 			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/PlatformCommon.framework\n",
-				"$(SRCROOT)/Carthage/Build/iOS/SwiftSoup.framework\n",
 			);
 			outputFileListPaths = (
+				"$(SRCROOT)/output.xcfilelist",
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 1;
-			shellPath = "/usr/local/bin/carthage copy-frameworks\n";
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n/usr/local/bin/carthage copy-frameworks\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -420,6 +402,7 @@
 		19802EF72619335600BDFEB0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -480,6 +463,7 @@
 		19802EF82619335600BDFEB0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -535,19 +519,23 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development: Khalid Asad (2T26787RLA)";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 2U7U8L936R;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = BugMeNot/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = Logismiko.BugMeNot;
+				PRODUCT_BUNDLE_IDENTIFIER = com.logismiko.bugmenot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = BugMeNotProvisioningProfile;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -557,19 +545,23 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Distribution: Khalid Asad (2U7U8L936R)";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 2U7U8L936R;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = BugMeNot/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = Logismiko.BugMeNot;
+				PRODUCT_BUNDLE_IDENTIFIER = com.logismiko.bugmenot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = BugMeNotAppStoreProvisioningProfile;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
